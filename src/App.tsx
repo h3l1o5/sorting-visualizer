@@ -2,6 +2,7 @@ import React, { useState, useRef } from "react";
 import _ from "lodash";
 import { generateData } from "./utils";
 import { bubbleSort } from "./sorting-algos";
+import Player from "./Player";
 
 const App: React.FC = () => {
   const sortingIntervalId = useRef<any>(null);
@@ -88,7 +89,16 @@ const App: React.FC = () => {
           ))}
         </div>
       </div>
-      <div style={{ flex: 1, backgroundColor: "papayawhip" }}>BOTTOM</div>
+      <div
+        style={{
+          flex: 1,
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <Player />
+      </div>
     </div>
   );
 };
