@@ -1,53 +1,37 @@
 import React, { useState, useRef } from "react";
-import "./App.css";
 import _ from "lodash";
-import bubbleSort from "./sorting-algos/bubble-sort";
+import { generateData } from "./utils";
+import { bubbleSort } from "./sorting-algos";
 
 const App: React.FC = () => {
   const sortingIntervalId = useRef<any>(null);
-  const [state, setState] = useState({
-    elements: [
-      { id: 0, value: 1, position: 0, color: "#fff" },
-      { id: 1, value: 2, position: 1, color: "#fff" },
-      { id: 2, value: 3, position: 2, color: "#fff" },
-      { id: 3, value: 4, position: 3, color: "#fff" },
-      { id: 4, value: 5, position: 4, color: "#fff" },
-      { id: 5, value: 6, position: 5, color: "#fff" },
-      { id: 6, value: 7, position: 6, color: "#fff" },
-      { id: 7, value: 8, position: 7, color: "#fff" },
-      { id: 8, value: 9, position: 8, color: "#fff" },
-      { id: 9, value: 10, position: 9, color: "#fff" },
-    ],
-  });
+  const [data, setData] = useState(generateData(20, 50));
 
-  const handleGenerate = () => {
+  const handleGenerateData = () => {
     clearInterval(sortingIntervalId.current);
 
     const amount = _.random(10, 30);
-    const elements = _.chain(amount)
-      .range()
-      .map(i => ({ id: _.random(1, true), value: _.random(1, 30), position: i, color: "#fff" }))
-      .value();
+    const maxValue = _.random(30, 50);
 
-    setState({ elements });
+    setData(generateData(amount, maxValue));
   };
 
   const handleSort = () => {
     clearInterval(sortingIntervalId.current);
 
-    const steps = bubbleSort(state.elements);
+    const steps = bubbleSort(data);
     let i = 0;
     sortingIntervalId.current = setInterval(() => {
       if (i < steps.length) {
-        setState({ elements: steps[i] });
+        setData(steps[i]);
         i++;
       } else {
         clearInterval(sortingIntervalId.current);
       }
-    }, 100);
+    }, 300);
   };
 
-  const maxValue = _.maxBy(state.elements, e => e.value)!.value;
+  const maxValue = _.maxBy(data, e => e.value)!.value;
 
   return (
     <div style={{ width: "100vw", height: "100vh", display: "flex", flexDirection: "column" }}>
@@ -60,7 +44,7 @@ const App: React.FC = () => {
           alignItems: "center",
         }}
       >
-        <button onClick={handleGenerate}>GENERATE</button>
+        <button onClick={handleGenerateData}>GENERATE</button>
         <button onClick={handleSort}>SORT</button>
       </div>
       <div
@@ -70,26 +54,29 @@ const App: React.FC = () => {
         }}
       >
         <div style={{ height: "100%", width: "100%", position: "relative" }}>
-          {state.elements.map(e => (
+          {data.map(e => (
             <div
               key={e.id}
               style={{
-                transition: "all 100ms",
+                transition: "all 300ms",
                 position: "absolute",
                 bottom: 0,
-                left: `calc((100% / ${state.elements.length}) * ${e.position})`,
+                left: `calc((100% / ${data.length}) * ${e.position})`,
                 height: `calc(100% * ${e.value / maxValue})`,
-                width: `calc(100% / ${state.elements.length})`,
+                width: `calc(100% / ${data.length})`,
                 padding: "5px",
                 boxSizing: "border-box",
               }}
             >
-              <p style={{ color: e.color, margin: 0, textAlign: "center" }}>{e.value}</p>
+              <p style={{ transition: "all 300ms", color: e.color || "#fff", margin: 0, textAlign: "center" }}>
+                {e.value}
+              </p>
               <div
                 style={{
+                  transition: "all 300ms",
                   height: "100%",
                   width: "100%",
-                  backgroundColor: e.color,
+                  backgroundColor: e.color || "#fff",
                   borderRadius: "5px",
                   display: "flex",
                   flexDirection: "column",
@@ -101,7 +88,7 @@ const App: React.FC = () => {
           ))}
         </div>
       </div>
-      <div style={{ flex: 2, backgroundColor: "papayawhip" }}>BOTTOM</div>
+      <div style={{ flex: 1, backgroundColor: "papayawhip" }}>BOTTOM</div>
     </div>
   );
 };
