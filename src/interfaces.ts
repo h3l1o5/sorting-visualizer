@@ -1,8 +1,8 @@
-export interface Element {
+export interface Data {
   id: number;
   value: number;
   position: number;
   color?: string;
 }
 
-export type Data = Element[];
+export type DataSet = Data[];

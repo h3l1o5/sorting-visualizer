@@ -1,25 +1,25 @@
 import React from "react";
 import _ from "lodash";
-import { Data } from "./interfaces";
+import { DataSet } from "./interfaces";
 
 interface Props {
-  data: Data;
+  dataSet: DataSet;
 }
 const Board: React.FC<Props> = props => {
-  const maxValue = _.maxBy(props.data, e => e.value)!.value;
+  const maxValue = _.maxBy(props.dataSet, e => e.value)!.value;
 
   return (
     <div style={{ height: "100%", width: "100%", position: "relative" }}>
-      {props.data.map(e => (
+      {props.dataSet.map(e => (
         <div
           key={e.id}
           style={{
-            transition: "all 300ms",
+            transition: "all 150ms",
             position: "absolute",
             bottom: 0,
-            left: `calc((100% / ${props.data.length}) * ${e.position})`,
+            left: `calc((100% / ${props.dataSet.length}) * ${e.position})`,
             height: "100%",
-            width: `calc(100% / ${props.data.length})`,
+            width: `calc(100% / ${props.dataSet.length})`,
             padding: "5px",
             boxSizing: "border-box",
             display: "flex",
@@ -29,7 +29,7 @@ const Board: React.FC<Props> = props => {
         >
           <p
             style={{
-              transition: "all 300ms",
+              transition: "all 150ms",
               color: e.color || "#fff",
               margin: 0,
               textAlign: "center",
