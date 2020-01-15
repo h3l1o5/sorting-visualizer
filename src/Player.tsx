@@ -1,11 +1,18 @@
 import React from "react";
 import styled from "styled-components";
-import { MdPlayArrow, MdPause, MdFastForward, MdFastRewind, MdReplay } from "react-icons/md";
+import { MdPlayArrow, MdPause, MdFastForward, MdFastRewind, MdReplay, MdStop } from "react-icons/md";
 
 interface Props {
-  status: "PLAYING" | "PAUSED" | "FINISHED";
+  isPlaying: boolean;
+  canPlayOrPause: boolean;
+  canStop: boolean;
+  canForward: boolean;
+  canBackward: boolean;
   progress: number;
   onClickPlay: () => void;
+  onClickStop: () => void;
+  onClickForward: () => void;
+  onClickBackward: () => void;
 }
 const Player: React.FC<Props> = props => {
   return (
@@ -19,16 +26,17 @@ const Player: React.FC<Props> = props => {
       }}
     >
       <div style={{ display: "flex", flexDirection: "row", justifyContent: "center", alignItems: "center" }}>
-        <Button style={{ display: "flex", justifyContent: "center" }}>
-          <MdFastRewind size={30} />
+        <Button disabled={!props.canBackward} onClick={props.onClickBackward}>
+          <MdFastRewind />
         </Button>
-        <Button onClick={props.onClickPlay} style={{ display: "flex", justifyContent: "center" }}>
-          {props.status === "PLAYING" && <MdPause size={30} />}
-          {props.status === "PAUSED" && <MdPlayArrow size={30} />}
-          {props.status === "FINISHED" && <MdReplay size={30} />}
+        <Button disabled={!props.canPlayOrPause} onClick={props.onClickPlay}>
+          {props.isPlaying ? <MdPause /> : <MdPlayArrow />}
         </Button>
-        <Button style={{ display: "flex", justifyContent: "center" }}>
-          <MdFastForward size={30} />
+        <Button disabled={!props.canForward} onClick={props.onClickForward}>
+          <MdFastForward />
+        </Button>
+        <Button disabled={!props.canStop} onClick={props.onClickStop}>
+          <MdStop />
         </Button>
       </div>
       <div style={{ height: "5px", width: "500px", backgroundColor: "gray", borderRadius: "2px" }}>
@@ -49,6 +57,9 @@ const Player: React.FC<Props> = props => {
 export default Player;
 
 const Button = styled.button`
+  display: flex;
+  justify-content: center;
+  align-items: center;
   height: 50px;
   width: 50px;
   border-radius: 50%;
@@ -56,6 +67,7 @@ const Button = styled.button`
   border: 2px solid #fff;
   color: #fff;
   margin: 0px 10px;
+  opacity: ${props => (props.disabled ? 0.5 : 1)};
   &:focus {
     outline: none;
   }
