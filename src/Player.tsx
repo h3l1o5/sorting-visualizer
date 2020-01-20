@@ -57,9 +57,6 @@ const Player: React.FC<Props> = props => {
 export default Player;
 
 const Button = styled.button`
-  display: flex;
-  justify-content: center;
-  align-items: center;
   height: 50px;
   width: 50px;
   border-radius: 50%;

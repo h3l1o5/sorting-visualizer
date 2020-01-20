@@ -110,7 +110,7 @@ const App: React.FC = () => {
     : 0;
 
   return (
-    <IconContext.Provider value={{ size: "2em" }}>
+    <IconContext.Provider value={{ size: "2em", style: { verticalAlign: "middle" } }}>
       <div style={{ width: "100vw", height: "100vh", display: "flex", flexDirection: "column" }}>
         <div
           style={{
