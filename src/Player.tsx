@@ -1,6 +1,7 @@
 import React from "react";
-import styled from "styled-components";
-import { MdPlayArrow, MdPause, MdFastForward, MdFastRewind, MdReplay, MdStop } from "react-icons/md";
+import { MdPlayArrow, MdPause, MdFastForward, MdFastRewind, MdStop } from "react-icons/md";
+
+import Button from "./components/Button";
 
 interface Props {
   isPlaying: boolean;
@@ -26,16 +27,16 @@ const Player: React.FC<Props> = props => {
       }}
     >
       <div style={{ display: "flex", flexDirection: "row", justifyContent: "center", alignItems: "center" }}>
-        <Button disabled={!props.canBackward} onClick={props.onClickBackward}>
+        <Button rounded disabled={!props.canBackward} onClick={props.onClickBackward}>
           <MdFastRewind />
         </Button>
-        <Button disabled={!props.canPlayOrPause} onClick={props.onClickPlay}>
+        <Button rounded disabled={!props.canPlayOrPause} onClick={props.onClickPlay}>
           {props.isPlaying ? <MdPause /> : <MdPlayArrow />}
         </Button>
-        <Button disabled={!props.canForward} onClick={props.onClickForward}>
+        <Button rounded disabled={!props.canForward} onClick={props.onClickForward}>
           <MdFastForward />
         </Button>
-        <Button disabled={!props.canStop} onClick={props.onClickStop}>
+        <Button rounded disabled={!props.canStop} onClick={props.onClickStop}>
           <MdStop />
         </Button>
       </div>
@@ -55,20 +56,3 @@ const Player: React.FC<Props> = props => {
 };
 
 export default Player;
-
-const Button = styled.button`
-  height: 50px;
-  width: 50px;
-  border-radius: 50%;
-  background-color: transparent;
-  border: 2px solid #fff;
-  color: #fff;
-  margin: 0px 10px;
-  opacity: ${props => (props.disabled ? 0.5 : 1)};
-  &:focus {
-    outline: none;
-  }
-  &:active {
-    opacity: 0.5;
-  }
-`;

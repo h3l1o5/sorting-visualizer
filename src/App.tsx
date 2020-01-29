@@ -7,6 +7,7 @@ import { bubbleSort } from "./sorting-algos";
 import Board from "./Board";
 import Player from "./Player";
 import { DataSet } from "./interfaces";
+import Button from "./components/Button";
 
 const App: React.FC = () => {
   const displayIntervalId = useRef<number | undefined>(undefined);
@@ -116,11 +117,23 @@ const App: React.FC = () => {
           style={{
             flex: 1,
             display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
+            flexDirection: "row",
           }}
         >
-          <button onClick={handleGenerateData}>GENERATE</button>
+          <div
+            style={{
+              flex: 2,
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Button onClick={handleGenerateData} style={{ padding: 10, fontSize: "1em" }}>
+              GENERATE NEW DATA
+            </Button>
+          </div>
+          <div style={{ backgroundColor: "green", flex: 5 }}>123</div>
         </div>
         <div style={{ flex: 5, padding: "20px 40px" }}>
           <Board dataSet={sortingMovements ? sortingMovements.movements[sortingMovements.displayedIndex] : dataSet} />
