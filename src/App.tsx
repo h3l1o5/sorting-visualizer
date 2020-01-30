@@ -173,7 +173,7 @@ const App: React.FC = () => {
               flex: 1,
               display: "flex",
               flexDirection: "column",
-              justifyContent: "center",
+              justifyContent: "flex-start",
               alignItems: "center",
             }}
           >
