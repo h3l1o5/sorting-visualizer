@@ -1,10 +1,20 @@
-import { DataSet } from "../interfaces";
 import _ from "lodash";
 
-export default (dataSet: DataSet) => {
+import { colors } from "../utils";
+import { DataSet, SortingResult } from "../interfaces";
+
+export default (dataSet: DataSet): SortingResult => {
   const length = dataSet.length;
   const movements: DataSet[] = [];
-  movements.push(_.cloneDeep(dataSet));
+
+  const initialState = _.chain(dataSet)
+    .cloneDeep()
+    .map(item => {
+      item.color = colors.unsorted;
+      return item;
+    })
+    .value();
+  movements.push(initialState);
 
   for (let i = 0; i < length; i++) {
     let swapped = false;
@@ -14,12 +24,12 @@ export default (dataSet: DataSet) => {
       const elementB = _.find(nextStatus, e => e.position === j + 1)!;
 
       nextStatus.forEach(e => {
-        if (e.color === "green") {
-          e.color = "#fff";
+        if (e.color === colors.comparing) {
+          e.color = colors.unsorted;
         }
       });
-      elementA.color = "green";
-      elementB.color = "green";
+      elementA.color = colors.comparing;
+      elementB.color = colors.comparing;
 
       movements.push(_.cloneDeep(nextStatus));
 
@@ -37,7 +47,7 @@ export default (dataSet: DataSet) => {
 
     if (!swapped) {
       nextStatus.forEach(e => {
-        e.color = "#DB7093";
+        e.color = colors.sorted;
       });
       movements.push(_.cloneDeep(nextStatus));
       break;
@@ -45,13 +55,20 @@ export default (dataSet: DataSet) => {
 
     const sortedElement = _.find(nextStatus, e => e.position === length - 1 - i)!;
     nextStatus.forEach(e => {
-      if (e.color === "green") {
-        e.color = "#fff";
+      if (e.color === colors.comparing) {
+        e.color = colors.unsorted;
       }
     });
-    sortedElement.color = "#DB7093";
+    sortedElement.color = colors.sorted;
     movements.push(_.cloneDeep(nextStatus));
   }
 
-  return movements;
+  return {
+    legends: [
+      { description: "Unsorted", color: colors.unsorted },
+      { description: "Comparing", color: colors.comparing },
+      { description: "Sorted", color: colors.sorted },
+    ],
+    movements,
+  };
 };

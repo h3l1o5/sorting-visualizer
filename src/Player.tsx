@@ -1,6 +1,7 @@
 import React from "react";
 import { MdPlayArrow, MdPause, MdFastForward, MdFastRewind, MdStop } from "react-icons/md";
 
+import { colors } from "./utils";
 import Button from "./components/Button";
 
 interface Props {
@@ -27,16 +28,16 @@ const Player: React.FC<Props> = props => {
       }}
     >
       <div style={{ display: "flex", flexDirection: "row", justifyContent: "center", alignItems: "center" }}>
-        <Button rounded disabled={!props.canBackward} onClick={props.onClickBackward}>
+        <Button color={colors.white} rounded disabled={!props.canBackward} onClick={props.onClickBackward}>
           <MdFastRewind />
         </Button>
-        <Button rounded disabled={!props.canPlayOrPause} onClick={props.onClickPlay}>
+        <Button color={colors.white} rounded disabled={!props.canPlayOrPause} onClick={props.onClickPlay}>
           {props.isPlaying ? <MdPause /> : <MdPlayArrow />}
         </Button>
-        <Button rounded disabled={!props.canForward} onClick={props.onClickForward}>
+        <Button color={colors.white} rounded disabled={!props.canForward} onClick={props.onClickForward}>
           <MdFastForward />
         </Button>
-        <Button rounded disabled={!props.canStop} onClick={props.onClickStop}>
+        <Button color={colors.white} rounded disabled={!props.canStop} onClick={props.onClickStop}>
           <MdStop />
         </Button>
       </div>

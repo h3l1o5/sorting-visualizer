@@ -2,34 +2,33 @@ import React, { useState, useRef } from "react";
 import _ from "lodash";
 import { IconContext } from "react-icons";
 
-import { generateData } from "./utils";
+import { generateData, colors } from "./utils";
 import { bubbleSort } from "./sorting-algos";
 import Board from "./Board";
 import Player from "./Player";
-import { DataSet } from "./interfaces";
+import { DataSet, Legend } from "./interfaces";
 import Button from "./components/Button";
 
 const App: React.FC = () => {
   const displayIntervalId = useRef<number | undefined>(undefined);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [dataSet, setDataSet] = useState(generateData(10, 30));
-  const [sortingMovements, setSortingMovements] = useState<
-    { movements: DataSet[]; displayedIndex: number } | undefined
+  const [dataSet, setDataSet] = useState(generateData(_.random(10, 50), 50));
+  const [sortingStatus, setSortingStatus] = useState<
+    { legends: Legend[]; movements: DataSet[]; displayedIndex: number } | undefined
   >(undefined);
 
   const handleGenerateData = () => {
-    const amount = _.random(10, 30);
-    const maxValue = _.random(20, 30);
-
     stopPlaying();
-    setDataSet(generateData(amount, maxValue));
-    setSortingMovements(undefined);
+    setDataSet(generateData(_.random(10, 50), 50));
+    setSortingStatus(undefined);
   };
 
   const handlePlayClicked = () => {
-    if (sortingMovements === undefined) {
-      setSortingMovements({
-        movements: bubbleSort(dataSet),
+    if (sortingStatus === undefined) {
+      const sortingResult = bubbleSort(dataSet);
+      setSortingStatus({
+        movements: sortingResult.movements,
+        legends: sortingResult.legends,
         displayedIndex: 0,
       });
     }
@@ -43,7 +42,7 @@ const App: React.FC = () => {
 
   const handleStopClicked = () => {
     stopPlaying();
-    setSortingMovements(undefined);
+    setSortingStatus(undefined);
   };
 
   const handleForwardClicked = () => {
@@ -57,7 +56,7 @@ const App: React.FC = () => {
   };
 
   const stepForward = () => {
-    setSortingMovements(prevState => {
+    setSortingStatus(prevState => {
       if (prevState === undefined) {
         return prevState;
       }
@@ -73,7 +72,7 @@ const App: React.FC = () => {
   };
 
   const stepBackward = () => {
-    setSortingMovements(prevState => {
+    setSortingStatus(prevState => {
       if (prevState === undefined) {
         return prevState;
       }
@@ -99,16 +98,11 @@ const App: React.FC = () => {
     displayIntervalId.current = undefined;
   };
 
-  const canPlayOrPause = !(
-    sortingMovements && sortingMovements.displayedIndex >= sortingMovements.movements.length - 1
-  );
-  const canStop = sortingMovements !== undefined;
-  const canForward =
-    sortingMovements !== undefined && sortingMovements.displayedIndex < sortingMovements.movements.length - 1;
-  const canBackward = sortingMovements !== undefined && sortingMovements!.displayedIndex > 0;
-  const progress = sortingMovements
-    ? (sortingMovements.displayedIndex / (sortingMovements.movements.length - 1)) * 100
-    : 0;
+  const canPlayOrPause = !(sortingStatus && sortingStatus.displayedIndex >= sortingStatus.movements.length - 1);
+  const canStop = sortingStatus !== undefined;
+  const canForward = sortingStatus !== undefined && sortingStatus.displayedIndex < sortingStatus.movements.length - 1;
+  const canBackward = sortingStatus !== undefined && sortingStatus!.displayedIndex > 0;
+  const progress = sortingStatus ? (sortingStatus.displayedIndex / (sortingStatus.movements.length - 1)) * 100 : 0;
 
   return (
     <IconContext.Provider value={{ size: "2em", style: { verticalAlign: "middle" } }}>
@@ -122,21 +116,25 @@ const App: React.FC = () => {
         >
           <div
             style={{
-              flex: 2,
+              flex: 1,
               display: "flex",
-              flexDirection: "column",
               justifyContent: "center",
               alignItems: "center",
             }}
           >
-            <Button onClick={handleGenerateData} style={{ padding: 10, fontSize: "1em" }}>
+            <Button color={colors.white} onClick={handleGenerateData} style={{ padding: 10, fontSize: "1em" }}>
               GENERATE NEW DATA
             </Button>
           </div>
-          <div style={{ backgroundColor: "green", flex: 5 }}>123</div>
+          <div style={{ height: "50%", width: "2px", backgroundColor: "silver", alignSelf: "center" }}></div>
+          <div style={{ flex: 5 }}></div>
         </div>
         <div style={{ flex: 5, padding: "20px 40px" }}>
-          <Board dataSet={sortingMovements ? sortingMovements.movements[sortingMovements.displayedIndex] : dataSet} />
+          <Board
+            maxValue={50}
+            legends={sortingStatus ? sortingStatus.legends : []}
+            dataSet={sortingStatus ? sortingStatus.movements[sortingStatus.displayedIndex] : dataSet}
+          />
         </div>
         <div style={{ flex: 1, display: "flex", justifyContent: "center", alignItems: "center" }}>
           <Player

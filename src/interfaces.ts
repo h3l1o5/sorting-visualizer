@@ -6,3 +6,13 @@ export interface Data {
 }
 
 export type DataSet = Data[];
+
+export interface Legend {
+  description: string;
+  color: string;
+}
+
+export interface SortingResult {
+  movements: DataSet[];
+  legends: Legend[];
+}
