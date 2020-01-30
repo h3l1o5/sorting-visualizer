@@ -1,5 +1,5 @@
 import React from "react";
-import _ from "lodash";
+
 import { DataSet, Legend } from "./interfaces";
 import { colors } from "./utils";
 
@@ -7,6 +7,7 @@ interface Props {
   maxValue: number;
   legends: Legend[];
   dataSet: DataSet;
+  transitionDelay: string;
 }
 const Board: React.FC<Props> = props => {
   return (
@@ -44,7 +45,7 @@ const Board: React.FC<Props> = props => {
           <div
             key={e.id}
             style={{
-              transition: "all 150ms",
+              transition: `all ${props.transitionDelay}`,
               position: "absolute",
               bottom: 0,
               left: `calc((100% / ${props.dataSet.length}) * ${e.position})`,
@@ -59,7 +60,7 @@ const Board: React.FC<Props> = props => {
           >
             <p
               style={{
-                transition: "all 150ms",
+                transition: `all ${props.transitionDelay}`,
                 color: e.color || colors.white,
                 margin: 0,
                 textAlign: "center",
@@ -70,7 +71,7 @@ const Board: React.FC<Props> = props => {
             </p>
             <div
               style={{
-                transition: "all 300ms",
+                transition: `all ${props.transitionDelay}`,
                 height: `calc((100% - 1.2rem) * ${e.value / props.maxValue})`,
                 width: "100%",
                 backgroundColor: e.color || colors.white,

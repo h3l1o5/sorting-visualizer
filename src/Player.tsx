@@ -1,7 +1,6 @@
 import React from "react";
 import { MdPlayArrow, MdPause, MdFastForward, MdFastRewind, MdStop } from "react-icons/md";
 
-import { colors } from "./utils";
 import Button from "./components/Button";
 
 interface Props {
@@ -28,23 +27,23 @@ const Player: React.FC<Props> = props => {
       }}
     >
       <div style={{ display: "flex", flexDirection: "row", justifyContent: "center", alignItems: "center" }}>
-        <Button color={colors.white} rounded disabled={!props.canBackward} onClick={props.onClickBackward}>
+        <Button rounded disabled={!props.canBackward} onClick={props.onClickBackward}>
           <MdFastRewind />
         </Button>
-        <Button color={colors.white} rounded disabled={!props.canPlayOrPause} onClick={props.onClickPlay}>
+        <Button rounded disabled={!props.canPlayOrPause} onClick={props.onClickPlay}>
           {props.isPlaying ? <MdPause /> : <MdPlayArrow />}
         </Button>
-        <Button color={colors.white} rounded disabled={!props.canForward} onClick={props.onClickForward}>
+        <Button rounded disabled={!props.canForward} onClick={props.onClickForward}>
           <MdFastForward />
         </Button>
-        <Button color={colors.white} rounded disabled={!props.canStop} onClick={props.onClickStop}>
+        <Button rounded disabled={!props.canStop} onClick={props.onClickStop}>
           <MdStop />
         </Button>
       </div>
       <div style={{ height: "5px", width: "500px", backgroundColor: "gray", borderRadius: "2px" }}>
         <div
           style={{
-            transition: "all 300ms",
+            transition: "all 200ms",
             height: "100%",
             width: `${props.progress}%`,
             backgroundColor: "silver",

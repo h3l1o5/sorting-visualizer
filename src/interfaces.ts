@@ -16,3 +16,5 @@ export interface SortingResult {
   movements: DataSet[];
   legends: Legend[];
 }
+
+export type Speed = "SLOW" | "NORMAL" | "FAST";

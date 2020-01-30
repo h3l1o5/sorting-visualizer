@@ -2,11 +2,11 @@ import React, { useState, useRef } from "react";
 import _ from "lodash";
 import { IconContext } from "react-icons";
 
-import { generateData, colors } from "./utils";
+import { generateData, colors, constants } from "./utils";
 import { bubbleSort } from "./sorting-algos";
 import Board from "./Board";
 import Player from "./Player";
-import { DataSet, Legend } from "./interfaces";
+import { DataSet, Legend, Speed } from "./interfaces";
 import Button from "./components/Button";
 
 const App: React.FC = () => {
@@ -16,6 +16,7 @@ const App: React.FC = () => {
   const [sortingStatus, setSortingStatus] = useState<
     { legends: Legend[]; movements: DataSet[]; displayedIndex: number } | undefined
   >(undefined);
+  const [speed, setSpeed] = useState<Speed>("NORMAL");
 
   const handleGenerateData = () => {
     stopPlaying();
@@ -36,7 +37,7 @@ const App: React.FC = () => {
     if (isPlaying) {
       stopPlaying();
     } else {
-      startPlaying();
+      startPlaying(speed);
     }
   };
 
@@ -53,6 +54,16 @@ const App: React.FC = () => {
   const handleBackwardClicked = () => {
     stopPlaying();
     stepBackward();
+  };
+
+  const handleSpeedChanged = (nextSpeed: Speed) => {
+    if (speed !== nextSpeed) {
+      setSpeed(nextSpeed);
+
+      if (isPlaying) {
+        startPlaying(nextSpeed);
+      }
+    }
   };
 
   const stepForward = () => {
@@ -85,11 +96,15 @@ const App: React.FC = () => {
     });
   };
 
-  const startPlaying = () => {
+  const startPlaying = (speed: Speed) => {
     setIsPlaying(true);
+
+    clearInterval(displayIntervalId.current);
+    displayIntervalId.current = undefined;
+
     displayIntervalId.current = setInterval(() => {
       stepForward();
-    }, 300);
+    }, constants.TIMER_DELAY[speed]);
   };
 
   const stopPlaying = () => {
@@ -122,33 +137,63 @@ const App: React.FC = () => {
               alignItems: "center",
             }}
           >
-            <Button color={colors.white} onClick={handleGenerateData} style={{ padding: 10, fontSize: "1em" }}>
+            <Button onClick={handleGenerateData} style={{ padding: 10, fontSize: "1em" }}>
               GENERATE NEW DATA
             </Button>
           </div>
           <div style={{ height: "50%", width: "2px", backgroundColor: "silver", alignSelf: "center" }}></div>
           <div style={{ flex: 5 }}></div>
         </div>
-        <div style={{ flex: 5, padding: "20px 40px" }}>
+        <div style={{ flex: 5, padding: "10px 40px" }}>
           <Board
             maxValue={50}
+            transitionDelay={isPlaying ? constants.TRANSITION_DELAY[speed] : "500ms"}
             legends={sortingStatus ? sortingStatus.legends : []}
             dataSet={sortingStatus ? sortingStatus.movements[sortingStatus.displayedIndex] : dataSet}
           />
         </div>
-        <div style={{ flex: 1, display: "flex", justifyContent: "center", alignItems: "center" }}>
-          <Player
-            isPlaying={isPlaying}
-            canPlayOrPause={canPlayOrPause}
-            canStop={canStop}
-            canForward={canForward}
-            canBackward={canBackward}
-            progress={progress}
-            onClickPlay={handlePlayClicked}
-            onClickStop={handleStopClicked}
-            onClickForward={handleForwardClicked}
-            onClickBackward={handleBackwardClicked}
-          />
+        <div style={{ flex: 1, display: "flex", flexDirection: "row" }}>
+          <div style={{ flex: 1 }}></div>
+          <div style={{ flex: 1, display: "flex", justifyContent: "center", alignItems: "center" }}>
+            <Player
+              isPlaying={isPlaying}
+              canPlayOrPause={canPlayOrPause}
+              canStop={canStop}
+              canForward={canForward}
+              canBackward={canBackward}
+              progress={progress}
+              onClickPlay={handlePlayClicked}
+              onClickStop={handleStopClicked}
+              onClickForward={handleForwardClicked}
+              onClickBackward={handleBackwardClicked}
+            />
+          </div>
+          <div
+            style={{
+              flex: 1,
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <p style={{ fontSize: "1em", color: colors.white }}>SPEED</p>
+            <div style={{ display: "flex", flexDirection: "row" }}>
+              <Button style={{ padding: 10 }} selected={speed === "SLOW"} onClick={() => handleSpeedChanged("SLOW")}>
+                SLOW
+              </Button>
+              <Button
+                style={{ padding: 10 }}
+                selected={speed === "NORMAL"}
+                onClick={() => handleSpeedChanged("NORMAL")}
+              >
+                NORMAL
+              </Button>
+              <Button style={{ padding: 10 }} selected={speed === "FAST"} onClick={() => handleSpeedChanged("FAST")}>
+                FAST
+              </Button>
+            </div>
+          </div>
         </div>
       </div>
     </IconContext.Provider>
