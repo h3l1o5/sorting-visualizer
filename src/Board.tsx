@@ -10,6 +10,7 @@ interface Props {
   transitionDelay: string;
 }
 const Board: React.FC<Props> = props => {
+  console.log(props.dataSet);
   return (
     <div style={{ height: "100%", width: "100%", display: "flex", flexDirection: "column" }}>
       <div

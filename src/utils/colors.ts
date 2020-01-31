@@ -4,4 +4,5 @@ export default {
   unsorted: "#40514e",
   sorted: "#fc5185",
   comparing: "#f08a5d",
+  unsortedSmallest: "#916dd5",
 };

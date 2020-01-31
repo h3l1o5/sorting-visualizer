@@ -18,3 +18,5 @@ export interface SortingResult {
 }
 
 export type Speed = "SLOW" | "NORMAL" | "FAST";
+
+export type SortingAlgo = "BUBBLE" | "SELECTION" | "INSERTION" | "QUICK";

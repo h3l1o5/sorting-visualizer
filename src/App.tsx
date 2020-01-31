@@ -3,10 +3,10 @@ import _ from "lodash";
 import { IconContext } from "react-icons";
 
 import { generateData, colors, constants } from "./utils";
-import { bubbleSort } from "./sorting-algos";
+import { bubbleSort, selectionSort } from "./sorting-algos";
 import Board from "./Board";
 import Player from "./Player";
-import { DataSet, Legend, Speed } from "./interfaces";
+import { DataSet, Legend, Speed, SortingAlgo } from "./interfaces";
 import Button from "./components/Button";
 
 const App: React.FC = () => {
@@ -17,16 +17,16 @@ const App: React.FC = () => {
     { legends: Legend[]; movements: DataSet[]; displayedIndex: number } | undefined
   >(undefined);
   const [speed, setSpeed] = useState<Speed>("NORMAL");
+  const [algo, setAlgo] = useState<SortingAlgo>("BUBBLE");
 
   const handleGenerateData = () => {
-    stopPlaying();
     setDataSet(generateData(_.random(10, 50), 50));
     setSortingStatus(undefined);
   };
 
   const handlePlayClicked = () => {
     if (sortingStatus === undefined) {
-      const sortingResult = bubbleSort(dataSet);
+      const sortingResult = algo === "BUBBLE" ? bubbleSort(dataSet) : selectionSort(dataSet);
       setSortingStatus({
         movements: sortingResult.movements,
         legends: sortingResult.legends,
@@ -64,6 +64,10 @@ const App: React.FC = () => {
         startPlaying(nextSpeed);
       }
     }
+  };
+
+  const handleAlgoChanged = (nextAlgo: SortingAlgo) => {
+    setAlgo(nextAlgo);
   };
 
   const stepForward = () => {
@@ -131,18 +135,62 @@ const App: React.FC = () => {
         >
           <div
             style={{
-              flex: 1,
+              padding: 20,
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
             }}
           >
-            <Button onClick={handleGenerateData} style={{ padding: 10, fontSize: "1em" }}>
+            <Button
+              disabled={sortingStatus !== undefined}
+              onClick={handleGenerateData}
+              style={{ padding: 10, fontSize: "1em" }}
+            >
               GENERATE NEW DATA
             </Button>
           </div>
           <div style={{ height: "50%", width: "2px", backgroundColor: "silver", alignSelf: "center" }}></div>
-          <div style={{ flex: 5 }}></div>
+          <div
+            style={{
+              padding: 20,
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+            }}
+          >
+            <Button
+              disabled={sortingStatus !== undefined}
+              style={{ padding: 10, border: "none", fontSize: "1em" }}
+              selected={algo === "BUBBLE"}
+              onClick={() => handleAlgoChanged("BUBBLE")}
+            >
+              BUBBLE SORT
+            </Button>
+            <Button
+              disabled={sortingStatus !== undefined}
+              style={{ padding: 10, border: "none", fontSize: "1em" }}
+              selected={algo === "SELECTION"}
+              onClick={() => handleAlgoChanged("SELECTION")}
+            >
+              SELECTION SORT
+            </Button>
+            <Button
+              disabled={sortingStatus !== undefined}
+              style={{ padding: 10, border: "none", fontSize: "1em" }}
+              selected={algo === "INSERTION"}
+              onClick={() => handleAlgoChanged("INSERTION")}
+            >
+              INSERTION SORT
+            </Button>
+            <Button
+              disabled={sortingStatus !== undefined}
+              style={{ padding: 10, border: "none", fontSize: "1em" }}
+              selected={algo === "QUICK"}
+              onClick={() => handleAlgoChanged("QUICK")}
+            >
+              QUICK SORT
+            </Button>
+          </div>
         </div>
         <div style={{ flex: 5, padding: "10px 40px" }}>
           <Board
@@ -179,17 +227,25 @@ const App: React.FC = () => {
           >
             <p style={{ fontSize: "1em", color: colors.white }}>SPEED</p>
             <div style={{ display: "flex", flexDirection: "row" }}>
-              <Button style={{ padding: 10 }} selected={speed === "SLOW"} onClick={() => handleSpeedChanged("SLOW")}>
+              <Button
+                style={{ padding: 10, border: "none" }}
+                selected={speed === "SLOW"}
+                onClick={() => handleSpeedChanged("SLOW")}
+              >
                 SLOW
               </Button>
               <Button
-                style={{ padding: 10 }}
+                style={{ padding: 10, border: "none" }}
                 selected={speed === "NORMAL"}
                 onClick={() => handleSpeedChanged("NORMAL")}
               >
                 NORMAL
               </Button>
-              <Button style={{ padding: 10 }} selected={speed === "FAST"} onClick={() => handleSpeedChanged("FAST")}>
+              <Button
+                style={{ padding: 10, border: "none" }}
+                selected={speed === "FAST"}
+                onClick={() => handleSpeedChanged("FAST")}
+              >
                 FAST
               </Button>
             </div>
